@@ -1,0 +1,11 @@
+{
+    "name": "trash-slot",
+    "version": "1.0.0",
+    "title": "Trash Slot",
+    "author": "iRewiewer",
+    "factorio_version": "2.0",
+    "dependencies": [
+        "base >= 2.0"
+    ],
+    "description": "Adds a trash slot to your inventory where you can easily dispose of items."
+}
