@@ -7,5 +7,5 @@
     "dependencies": [
         "base >= 2.0"
     ],
-    "description": "Adds a trash slot to your inventory where you can easily dispose of items.\nIt also features a configurable keybind to press when hovering over an item to delete it."
+    "description": "Adds a trash slot to your inventory where you can easily dispose of items.\nIt also features a configurable keybind to press when clicking an item to delete the stack."
 }
