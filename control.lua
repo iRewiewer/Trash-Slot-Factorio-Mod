@@ -44,3 +44,11 @@ script.on_event(defines.events.on_gui_click, function(event)
         end
     end
 end)
+
+script.on_event("delete_selected_item", function(event)
+    local player = game.players[event.player_index]
+    local selected_item = player.cursor_stack
+    if selected_item and selected_item.valid_for_read then
+        selected_item.clear()
+    end
+end)
