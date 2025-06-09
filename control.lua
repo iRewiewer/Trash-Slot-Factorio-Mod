@@ -49,8 +49,10 @@ end)
 script.on_event(defines.events.on_gui_opened, function(event)
     local player = game.players[event.player_index]
     ensure_global_table()
-    if not global.trash_hidden[event.player_index] then
-        create_trash_slot(player)
+    if event.gui_type == 3 then
+        if not global.trash_hidden[event.player_index] then
+            create_trash_slot(player)
+        end
     end
 end)
 
@@ -84,10 +86,8 @@ script.on_event("hide_trash_ui", function(event)
     global.trash_hidden[pid] = not global.trash_hidden[pid]
 
     if global.trash_hidden[pid] then
-        destroy_trash_slot(player)
         player.print("Trash UI is now hidden. Press U again to re-enable.")
     else
-        create_trash_slot(player)
         player.print("Trash UI re-enabled. It will show next time you open an inventory GUI.")
     end
 end)
