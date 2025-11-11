@@ -1,9 +1,9 @@
 local DEFAULT_LOC = { 10, 40 }
 
-local function ensure_global()
-    global = global or {}
-    global.trash_hidden = global.trash_hidden or {}
-    global.trash_pos = global.trash_pos or {}
+local function ensure_script_data()
+    storage = storage or {}
+    storage.trash_hidden = storage.trash_hidden or {}
+    storage.trash_pos = storage.trash_pos or {}
 end
 
 local function get_player(pid)
@@ -27,7 +27,7 @@ local function create_trash_slot(player)
         style = "slot_button"
     }
 
-    local saved = global.trash_pos[player.index]
+    local saved = storage.trash_pos[player.index]
     frame.location = saved or DEFAULT_LOC
 end
 
@@ -38,7 +38,7 @@ local function destroy_trash_slot(player)
 end
 
 local function refresh_trash_visibility(player)
-    if global.trash_hidden[player.index] then
+    if storage.trash_hidden[player.index] then
         destroy_trash_slot(player)
     else
         create_trash_slot(player)
@@ -46,38 +46,38 @@ local function refresh_trash_visibility(player)
 end
 
 script.on_init(function()
-    ensure_global()
+    ensure_script_data()
     for _, p in pairs(game.players) do
-        if global.trash_hidden[p.index] == nil then
-            global.trash_hidden[p.index] = false
+        if storage.trash_hidden[p.index] == nil then
+            storage.trash_hidden[p.index] = false
         end
     end
 end)
 
 script.on_configuration_changed(function(_)
-    ensure_global()
+    ensure_script_data()
     for _, p in pairs(game.players) do
-        if global.trash_hidden[p.index] == nil then
-            global.trash_hidden[p.index] = false
+        if storage.trash_hidden[p.index] == nil then
+            storage.trash_hidden[p.index] = false
         end
         refresh_trash_visibility(p)
     end
 end)
 
 script.on_event(defines.events.on_player_created, function(event)
-    ensure_global()
+    ensure_script_data()
     local idx = event.player_index
-    if global.trash_hidden[idx] == nil then
-        global.trash_hidden[idx] = false
+    if storage.trash_hidden[idx] == nil then
+        storage.trash_hidden[idx] = false
     end
     local p = get_player(idx)
     refresh_trash_visibility(p)
 end)
 
 script.on_event(defines.events.on_gui_opened, function(event)
-    ensure_global()
+    ensure_script_data()
     local p = get_player(event.player_index)
-    if not global.trash_hidden[p.index] then
+    if not storage.trash_hidden[p.index] then
         create_trash_slot(p)
     end
 end)
@@ -91,8 +91,8 @@ script.on_event(defines.events.on_gui_location_changed, function(event)
     local elem = event.element
     if not (elem and elem.valid) then return end
     if elem.name == "trash_slot" then
-        ensure_global()
-        global.trash_pos[event.player_index] = elem.location
+        ensure_script_data()
+        storage.trash_pos[event.player_index] = elem.location
     end
 end)
 
@@ -115,12 +115,12 @@ script.on_event("delete_selected_item", function(event)
 end)
 
 script.on_event("hide_trash_ui", function(event)
-    ensure_global()
+    ensure_script_data()
     local pid = event.player_index
     local p = get_player(pid)
 
-    local new_state = not global.trash_hidden[pid]
-    global.trash_hidden[pid] = new_state
+    local new_state = not storage.trash_hidden[pid]
+    storage.trash_hidden[pid] = new_state
 
     if new_state then
         destroy_trash_slot(p)
